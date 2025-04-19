@@ -1,7 +1,8 @@
 const categories = document.getElementById("category") as HTMLSelectElement;
 const enterBtn = document.getElementById("submit-btn") as HTMLButtonElement;
 const costInp = document.getElementById("costInp") as HTMLInputElement;
-const totalcost = document.getElementById("total-cost") as HTMLSpanElement;
+const totalCost = document.getElementById("total-cost") as HTMLSpanElement;
+const inputError = document.getElementById("costInpError") as HTMLSpanElement
 
 
 const xValues: string[] = ["food/drink", "transport", "activity", "shopping", "accommodation", "health", "other"];
@@ -25,10 +26,9 @@ document.addEventListener("DOMContentLoaded", (): void => {
     if (costValues === null) {
         costValues = [0, 0, 0, 0, 0, 0, 0];
         localStorage.setItem("costValues", JSON.stringify(costValues));
-    }
-    else{
+    } else {
         const total: number = costValues.reduce((i: number, j: number) => i + j);
-        totalcost.textContent = `Total cost € ${total}`
+        totalCost.textContent = `Total cost € ${total.toPrecision(2)}`
     }
     chart = makeChart();
 
@@ -43,12 +43,12 @@ categories.addEventListener("change", (): void => {
 });
 
 enterBtn.addEventListener("click", (): void => {
-    const inputError = document.getElementById("costInpError") as HTMLSpanElement
+
 
     if (costInp.value.trim() !== "" && Number(costInp.value) > 0) {
         inputError.hidden = true
         const storedCostValues: number[] = JSON.parse(localStorage.getItem("costValues") as string);
-        storedCostValues[selectedCategory] += Number(costInp.value);
+        storedCostValues[selectedCategory] += Number(Number(costInp.value).toFixed(2));
 
         // Update the chart data
         // @ts-ignore
@@ -62,7 +62,7 @@ enterBtn.addEventListener("click", (): void => {
         processCategoryListValues(divEl, storedCostValues[selectedCategory]);
 
         const total: number = storedCostValues.reduce((i: number, j: number) => i + j);
-        totalcost.textContent = `Total cost € ${total}`
+        totalCost.textContent = `Total cost € ${total.toFixed(2)}`
 
         costInp.value = "";
 

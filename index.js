@@ -2,7 +2,8 @@
 const categories = document.getElementById("category");
 const enterBtn = document.getElementById("submit-btn");
 const costInp = document.getElementById("costInp");
-const totalcost = document.getElementById("total-cost");
+const totalCost = document.getElementById("total-cost");
+const inputError = document.getElementById("costInpError");
 const xValues = ["food/drink", "transport", "activity", "shopping", "accommodation", "health", "other"];
 let selectedCategory = 0;
 const barColors = [
@@ -24,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     else {
         const total = costValues.reduce((i, j) => i + j);
-        totalcost.textContent = `Total cost € ${total}`;
+        totalCost.textContent = `Total cost € ${total.toPrecision(2)}`;
     }
     chart = makeChart();
     for (let i = 0; i < 7; i++) {
@@ -36,11 +37,10 @@ categories.addEventListener("change", () => {
     selectedCategory = categories.selectedIndex;
 });
 enterBtn.addEventListener("click", () => {
-    const inputError = document.getElementById("costInpError");
     if (costInp.value.trim() !== "" && Number(costInp.value) > 0) {
         inputError.hidden = true;
         const storedCostValues = JSON.parse(localStorage.getItem("costValues"));
-        storedCostValues[selectedCategory] += Number(costInp.value);
+        storedCostValues[selectedCategory] += Number(Number(costInp.value).toFixed(2));
         // Update the chart data
         // @ts-ignore
         chart.data.datasets[0].data = storedCostValues;
@@ -50,7 +50,7 @@ enterBtn.addEventListener("click", () => {
         const divEl = document.getElementById(`${xValues[selectedCategory]}`);
         processCategoryListValues(divEl, storedCostValues[selectedCategory]);
         const total = storedCostValues.reduce((i, j) => i + j);
-        totalcost.textContent = `Total cost € ${total}`;
+        totalCost.textContent = `Total cost € ${total.toFixed(2)}`;
         costInp.value = "";
     }
     else {
