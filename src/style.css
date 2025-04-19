@@ -108,7 +108,7 @@ button:hover {
 
 
 #category-section {
-    margin-left: 30px;
+    margin-left: 10px;
     margin-top: 20px;
     padding: 15px;
     border: 1px solid #ccc;
@@ -117,19 +117,20 @@ button:hover {
     height: 400px;
     width: 80%;
     overflow: auto;
+    resize: both;
 
 }
-#category-list{
-    display: flex;
-    flex-direction: column;
-    column-gap: 5px;
-
+#category-list span{
+    display:flex;
+    flex-direction: row;
+    padding-top: 10px;
 
 }
 
 #category-list div {
     padding: 12px 0;
     border-bottom: 1px dashed #eee;
+
 
 }
 
