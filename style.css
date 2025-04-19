@@ -11,7 +11,7 @@ body {
 
 header {
     background-color: #007bff;
-    padding: 20px;
+    padding: 15px;
     text-align: center;
     width: 100%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -20,22 +20,20 @@ header {
 header h1 {
     color: white;
     margin: 0;
-    font-size: 24px;
+    font-size: 20px;
 }
 
 main {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 20px;
-    width: 90%;
-    height:100%;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    width: 95%;
     max-width: 1200px;
-    background-color: #f4f4f4;
+    background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 5px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
 label {
@@ -43,10 +41,11 @@ label {
     display: block;
     font-weight: 500;
     color: #555;
+    font-size: 16px;
 }
 
 input, select {
-    padding: 10px;
+    padding: 12px;
     margin: 5px 0 15px 0;
     width: 100%;
     border: 1px solid #ddd;
@@ -73,13 +72,13 @@ select:focus {
 button {
     background-color: #007bff;
     color: white;
-    padding: 12px 20px;
+    padding: 14px 24px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 18px;
     transition: background-color 0.3s ease;
-    margin-top: 10px;
+    margin-top: 15px;
     width: 100%;
 }
 
@@ -88,64 +87,94 @@ button:hover {
 }
 
 #myChart {
-   width: 100%;
-    max-width: 600px;
-    margin-top:40px;
-    border-radius: 10px;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 20px;
+    border-radius: 8px;
     box-sizing: border-box;
-    min-height: 300px;
+    min-height: 250px;
 }
 
 .form-container {
-    width: 40%;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding-right: 20px;
+    align-items: stretch;
+    padding-right: 0;
     box-sizing: border-box;
+    margin-bottom: 20px;
 }
-
 
 #category-section {
-    margin: 30px 0 10px 10px;
-    padding: 15px;
-    border: 1px solid #ccc;
+    margin: 20px 0 10px 0;
+    padding: 10px;
+
     border-radius: 5px;
     background-color: #f9f9f9;
-    height: 400px;
-    width: 80%;
+    width: 100%;
+    min-height: 200px;
     overflow: auto;
-    resize: both;
-
-
+    resize: none;
 }
-#category-list span{
-    display:flex;
+
+#category-list span {
+    display: flex;
     flex-direction: row;
-    padding-top: 10px;
+    padding-top: 8px;
 }
 
 #category-list div {
-    padding: 12px 0;
+    padding: 10px 0;
     border-bottom: 1px dashed #eee;
-
+    font-size: 16px;
 }
 
 #category-list div:last-child {
     border-bottom: none;
 }
 
-#total-cost{
-    font-size: 1.3em;
+#total-cost {
+    font-size: 1.2em; /* Adjusted font size */
     display: block;
     text-align: center;
-    text-shadow: 2px 2px #cfcfcf;
+    text-shadow: 1px 1px #ddd;
     color: #424242;
+    margin-top: 15px;
 }
 
-.error{
-    padding: 3px;
+.error {
+    padding: 5px;
     color: red;
     font-weight: bold;
+    font-size: 18px;
+    background-color: rgba(255, 0, 0, 0.12);
+    border-radius: 5px;
+}
+
+/* Media query for larger screens to restore two-column layout */
+@media (min-width: 768px) {
+    main {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 20px;
+    }
+
+    .form-container {
+        width: 40%;
+        padding-right: 20px;
+    }
+
+    #myChart {
+        padding:10px;
+        max-width: 600px;
+        margin-top: 40px;
+    }
+
+    #category-section {
+        border: 1px solid #ccc;
+        height: 400px;
+        width: 80%;
+        resize: both;
+    }
 }
