@@ -68,7 +68,6 @@ select:focus {
     box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
 }
 
-
 button {
     background-color: #007bff;
     color: white;
@@ -108,7 +107,6 @@ button:hover {
 #category-section {
     margin: 20px 0 10px 0;
     padding: 10px;
-
     border-radius: 5px;
     background-color: #f9f9f9;
     width: 100%;
@@ -131,6 +129,18 @@ button:hover {
 
 #category-list div:last-child {
     border-bottom: none;
+}
+
+.reset-button {
+    margin: 20px 0 30px 0;
+    padding: 10px 10px;
+    float: right;
+    display: inline;
+    background-color: rgba(255, 0, 21, 0.66);
+}
+
+.reset-button:hover {
+    background-color: #ff0000;
 }
 
 #total-cost {
@@ -166,7 +176,7 @@ button:hover {
     }
 
     #myChart {
-        padding:10px;
+        padding: 10px;
         max-width: 600px;
         margin-top: 40px;
     }
@@ -176,5 +186,9 @@ button:hover {
         height: 400px;
         width: 80%;
         resize: both;
+    }
+
+    .reset-button {
+        width: fit-content;
     }
 }

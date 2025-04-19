@@ -18,8 +18,8 @@
     <div class="form-container">
         <span id="costInpError" class="error" hidden>Invalid input! cost must be higher than 0 </span>
         <label for="costInp"> Cost: </label><input type="number" id="costInp" placeholder="Enter Cost" min="1" required>
-        <label for="category">Choose category:</label>
 
+        <label for="category">Choose category:</label>
         <select name="category" id="category">
             <option value="food/drink">Food &amp; Drink</option>
             <option value="transport">Transport</option>
@@ -32,39 +32,39 @@
 
         <label for="description">Description</label>
         <input type="text" id="description" placeholder="Enter a description here (optional)">
-
         <button id="submit-btn">Enter</button>
 
         <section id="category-section">
             <div id="category-list">
                 <div id="food/drink">
-                    <h3> Food &amp; Drink</h3> <span></span>
+                    <h3> Food &amp; Drink</h3><span></span>
                 </div>
                 <div id="transport">
-                    <h3>Transport</h3>  <span> </span>
+                    <h3>Transport</h3><span> </span>
                 </div>
                 <div id="activity">
-                    <h3>Activity</h3>  <span></span>
+                    <h3>Activity</h3><span></span>
                 </div>
                 <div id="shopping">
-                    <h3>Shopping </h3> <span></span>
+                    <h3>Shopping </h3><span></span>
                 </div>
                 <div id="accommodation">
-                    <h3> Accommodation </h3> <span></span>
+                    <h3> Accommodation </h3><span></span>
                 </div>
                 <div id="health">
-                    <h3> Health </h3> <span></span>
+                    <h3> Health </h3><span></span>
                 </div>
                 <div id="other">
-                    <h3> Other </h3> <span></span>
+                    <h3> Other </h3><span></span>
                 </div>
             </div>
         </section>
-
     </div>
+
     <div id="chart-container">
+        <button id="reset-btn" class="reset-button">Reset</button>
         <canvas id="myChart"></canvas>
-        <span id="total-cost"> </span>
+        <span id="total-cost"></span>
     </div>
 </main>
 

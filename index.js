@@ -4,6 +4,7 @@ const enterBtn = document.getElementById("submit-btn");
 const costInp = document.getElementById("costInp");
 const totalCost = document.getElementById("total-cost");
 const inputError = document.getElementById("costInpError");
+const resetBtn = document.getElementById("reset-btn");
 const xValues = ["food/drink", "transport", "activity", "shopping", "accommodation", "health", "other"];
 let selectedCategory = 0;
 const barColors = [
@@ -55,6 +56,12 @@ enterBtn.addEventListener("click", () => {
     }
     else {
         inputError.hidden = false;
+    }
+});
+resetBtn.addEventListener("click", () => {
+    if (confirm("Are you sure you want to reset the data?")) {
+        localStorage.clear();
+        location.reload();
     }
 });
 function processCategoryListValues(divEl, cost) {

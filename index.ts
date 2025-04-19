@@ -3,6 +3,7 @@ const enterBtn = document.getElementById("submit-btn") as HTMLButtonElement;
 const costInp = document.getElementById("costInp") as HTMLInputElement;
 const totalCost = document.getElementById("total-cost") as HTMLSpanElement;
 const inputError = document.getElementById("costInpError") as HTMLSpanElement
+const resetBtn = document.getElementById("reset-btn") as HTMLButtonElement;
 
 
 const xValues: string[] = ["food/drink", "transport", "activity", "shopping", "accommodation", "health", "other"];
@@ -43,8 +44,6 @@ categories.addEventListener("change", (): void => {
 });
 
 enterBtn.addEventListener("click", (): void => {
-
-
     if (costInp.value.trim() !== "" && Number(costInp.value) > 0) {
         inputError.hidden = true
         const storedCostValues: number[] = JSON.parse(localStorage.getItem("costValues") as string);
@@ -71,6 +70,12 @@ enterBtn.addEventListener("click", (): void => {
     }
 });
 
+resetBtn.addEventListener("click", (): void => {
+    if (confirm("Are you sure you want to reset the data?")) {
+        localStorage.clear();
+        location.reload();
+    }
+});
 
 function processCategoryListValues(divEl: HTMLDivElement, cost: number): void {
     divEl.children[1].textContent = `Category cost: € ${cost}`;
