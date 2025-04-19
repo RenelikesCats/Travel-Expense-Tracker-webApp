@@ -124,17 +124,20 @@ button:hover {
     display:flex;
     flex-direction: row;
     padding-top: 10px;
-
 }
 
 #category-list div {
     padding: 12px 0;
     border-bottom: 1px dashed #eee;
 
-
 }
-
 
 #category-list div:last-child {
     border-bottom: none;
+}
+
+.error{
+    padding: 3px;
+    color: red;
+    font-weight: bold;
 }

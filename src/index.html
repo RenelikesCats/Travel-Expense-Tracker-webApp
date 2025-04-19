@@ -13,7 +13,8 @@
 </header>
 <main>
     <div class="form-container">
-        <label for="costInp"> Cost: </label><input type="number" id="costInp" placeholder="Enter Cost" required>
+        <span id="costInpError" class="error" hidden>Invalid input! cost must be higher than 0 </span>
+        <label for="costInp"> Cost: </label><input type="number" id="costInp" placeholder="Enter Cost" min="1" required>
         <label for="category">Choose category:</label>
 
         <select name="category" id="category">
@@ -33,26 +34,26 @@
 
         <section id="category-section">
             <div id="category-list">
-                <div class="category-item" data-category="food/drink">
-                    <h3> Food &amp; Drink</h3> <span>Totaal:</span><span> Aantal:</span>
+                <div id="food/drink">
+                    <h3> Food &amp; Drink</h3> <span>Totaal:</span>
                 </div>
-                <div class="category-item" data-category="transport">
-                    <h3>Transport</h3>  <span>Totaal: </span><span> Aantal:</span>
+                <div id="transport">
+                    <h3>Transport</h3>  <span>Totaal: </span>
                 </div>
-                <div class="category-item" data-category="activity">
-                    <h3>Activity</h3>  <span>Totaal: </span><span> Aantal:</span>
+                <div id="activity">
+                    <h3>Activity</h3>  <span>Totaal: </span>
                 </div>
-                <div class="category-item" data-category="shopping">
-                    <h3>Shopping </h3> <span>Totaal: </span><span> Aantal:</span>
+                <div id="shopping">
+                    <h3>Shopping </h3> <span>Totaal: </span>
                 </div>
-                <div class="category-item" data-category="accommodation">
-                    <h3> Accommodation </h3> <span>Totaal: </span><span> Aantal:</span>
+                <div id="accommodation">
+                    <h3> Accommodation </h3> <span>Totaal: </span>
                 </div>
-                <div class="category-item" data-category="health">
-                    <h3> Health </h3> <span>Totaal: </span><span> Aantal:</span>
+                <div id="health">
+                    <h3> Health </h3> <span>Totaal: </span>
                 </div>
-                <div class="category-item" data-category="other">
-                    <h3> Other </h3> <span>Totaal: </span><span> Aantal:</span>
+                <div id="other">
+                    <h3> Other </h3> <span>Totaal: </span>
                 </div>
             </div>
         </section>

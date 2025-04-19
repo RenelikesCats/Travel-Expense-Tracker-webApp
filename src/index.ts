@@ -1,9 +1,9 @@
 const categories = document.getElementById("category") as HTMLSelectElement;
 const enterBtn = document.getElementById("submit-btn") as HTMLButtonElement;
 const costInp = document.getElementById("costInp") as HTMLInputElement;
-const catSection = document.getElementById("category-section") as HTMLElement;
 
-const xValues: string[] = ["food/drinks", "transport", "activity", "shopping", "accommodation", "health", "other"];
+
+const xValues: string[] = ["food/drink", "transport", "activity", "shopping", "accommodation", "health", "other"];
 let selectedCategory: number = 0;
 
 const barColors: string[] = [
@@ -25,7 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
         costValues = [0, 0, 0, 0, 0, 0, 0];
         localStorage.setItem("costValues", JSON.stringify(costValues));
     }
-    chart = chartMaken();
+    chart = makeChart();
+
+    for (let i = 0; i < 7; i++) {
+        const divEl = document.getElementById(`${xValues[i]}`) as HTMLDivElement;
+        processCategoryListValues(divEl, costValues[i])
+    }
+
 });
 
 categories.addEventListener("change", (): void => {
@@ -33,7 +39,10 @@ categories.addEventListener("change", (): void => {
 });
 
 enterBtn.addEventListener("click", (): void => {
-    if (costInp.value.trim() !== "") {
+    const inputError = document.getElementById("costInpError") as HTMLSpanElement
+
+    if (costInp.value.trim() !== "" && Number(costInp.value) > 0) {
+        inputError.hidden = true
         const storedCostValues: number[] = JSON.parse(localStorage.getItem("costValues") as string);
         storedCostValues[selectedCategory] += Number(costInp.value);
 
@@ -44,21 +53,22 @@ enterBtn.addEventListener("click", (): void => {
         chart.update();
 
         localStorage.setItem("costValues", JSON.stringify(storedCostValues));
+        const divEl = document.getElementById(`${xValues[selectedCategory]}`) as HTMLDivElement;
+        processCategoryListValues(divEl, storedCostValues[selectedCategory]);
 
         costInp.value = "";
+
+    } else {
+        inputError.hidden = false
     }
 });
 
-/*
-function appendCatSection(catName: string, cost: number, description?: string): void {
-    const span = document.createElement("span");
-    span.innerText = `${catName}: ${cost}`; // Display cost in the appended section
-    catSection.appendChild(span);
+function processCategoryListValues(divEl: HTMLDivElement, cost: number): void {
+    divEl.children[1].textContent = `Totaal: ${cost}`;
+
 }
 
- */
-
-function chartMaken(): Chart {
+function makeChart(): Chart {
     return new Chart("myChart", {
         type: "pie",
         data: {
