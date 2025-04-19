@@ -2,6 +2,7 @@
 const categories = document.getElementById("category");
 const enterBtn = document.getElementById("submit-btn");
 const costInp = document.getElementById("costInp");
+const totalcost = document.getElementById("total-cost");
 const xValues = ["food/drink", "transport", "activity", "shopping", "accommodation", "health", "other"];
 let selectedCategory = 0;
 const barColors = [
@@ -20,6 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (costValues === null) {
         costValues = [0, 0, 0, 0, 0, 0, 0];
         localStorage.setItem("costValues", JSON.stringify(costValues));
+    }
+    else {
+        const total = costValues.reduce((i, j) => i + j);
+        totalcost.textContent = `Total cost € ${total}`;
     }
     chart = makeChart();
     for (let i = 0; i < 7; i++) {
@@ -44,6 +49,8 @@ enterBtn.addEventListener("click", () => {
         localStorage.setItem("costValues", JSON.stringify(storedCostValues));
         const divEl = document.getElementById(`${xValues[selectedCategory]}`);
         processCategoryListValues(divEl, storedCostValues[selectedCategory]);
+        const total = storedCostValues.reduce((i, j) => i + j);
+        totalcost.textContent = `Total cost € ${total}`;
         costInp.value = "";
     }
     else {
@@ -51,7 +58,7 @@ enterBtn.addEventListener("click", () => {
     }
 });
 function processCategoryListValues(divEl, cost) {
-    divEl.children[1].textContent = `Totaal: ${cost}`;
+    divEl.children[1].textContent = `Category cost: € ${cost}`;
 }
 function makeChart() {
     return new Chart("myChart", {
@@ -69,3 +76,8 @@ function getLocalStorageData() {
     const data = localStorage.getItem("costValues");
     return data ? JSON.parse(data) : null;
 }
+costInp.addEventListener("keypress", (event) => {
+    if (event.key == "Enter") {
+        enterBtn.click();
+    }
+});

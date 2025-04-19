@@ -1,6 +1,7 @@
 const categories = document.getElementById("category") as HTMLSelectElement;
 const enterBtn = document.getElementById("submit-btn") as HTMLButtonElement;
 const costInp = document.getElementById("costInp") as HTMLInputElement;
+const totalcost = document.getElementById("total-cost") as HTMLSpanElement;
 
 
 const xValues: string[] = ["food/drink", "transport", "activity", "shopping", "accommodation", "health", "other"];
@@ -19,15 +20,19 @@ const barColors: string[] = [
 let costValues: number[] | null = [];
 let chart: Chart;
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", (): void => {
     costValues = getLocalStorageData();
     if (costValues === null) {
         costValues = [0, 0, 0, 0, 0, 0, 0];
         localStorage.setItem("costValues", JSON.stringify(costValues));
     }
+    else{
+        const total: number = costValues.reduce((i: number, j: number) => i + j);
+        totalcost.textContent = `Total cost € ${total}`
+    }
     chart = makeChart();
 
-    for (let i:number = 0; i < 7; i++) {
+    for (let i: number = 0; i < 7; i++) {
         const divEl = document.getElementById(`${xValues[i]}`) as HTMLDivElement;
         processCategoryListValues(divEl, costValues[i])
     }
@@ -52,8 +57,12 @@ enterBtn.addEventListener("click", (): void => {
         chart.update();
 
         localStorage.setItem("costValues", JSON.stringify(storedCostValues));
+
         const divEl = document.getElementById(`${xValues[selectedCategory]}`) as HTMLDivElement;
         processCategoryListValues(divEl, storedCostValues[selectedCategory]);
+
+        const total: number = storedCostValues.reduce((i: number, j: number) => i + j);
+        totalcost.textContent = `Total cost € ${total}`
 
         costInp.value = "";
 
@@ -62,9 +71,9 @@ enterBtn.addEventListener("click", (): void => {
     }
 });
 
-function processCategoryListValues(divEl: HTMLDivElement, cost: number): void {
-    divEl.children[1].textContent = `Totaal: ${cost}`;
 
+function processCategoryListValues(divEl: HTMLDivElement, cost: number): void {
+    divEl.children[1].textContent = `Category cost: € ${cost}`;
 }
 
 function makeChart(): Chart {
@@ -84,3 +93,9 @@ function getLocalStorageData(): number[] | null {
     const data = localStorage.getItem("costValues");
     return data ? JSON.parse(data) : null;
 }
+
+costInp.addEventListener("keypress", (event: KeyboardEvent): void => {
+    if (event.key == "Enter") {
+        enterBtn.click();
+    }
+})

@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>Travel Expense</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="/images/plane.png">
     <script src="index.js" defer></script>
+
 </head>
 <body>
 <header>
@@ -35,34 +37,40 @@
         <section id="category-section">
             <div id="category-list">
                 <div id="food/drink">
-                    <h3> Food &amp; Drink</h3> <span>Totaal:</span>
+                    <h3> Food &amp; Drink</h3> <span></span>
                 </div>
                 <div id="transport">
-                    <h3>Transport</h3>  <span>Totaal: </span>
+                    <h3>Transport</h3>  <span> </span>
                 </div>
                 <div id="activity">
-                    <h3>Activity</h3>  <span>Totaal: </span>
+                    <h3>Activity</h3>  <span></span>
                 </div>
                 <div id="shopping">
-                    <h3>Shopping </h3> <span>Totaal: </span>
+                    <h3>Shopping </h3> <span></span>
                 </div>
                 <div id="accommodation">
-                    <h3> Accommodation </h3> <span>Totaal: </span>
+                    <h3> Accommodation </h3> <span></span>
                 </div>
                 <div id="health">
-                    <h3> Health </h3> <span>Totaal: </span>
+                    <h3> Health </h3> <span></span>
                 </div>
                 <div id="other">
-                    <h3> Other </h3> <span>Totaal: </span>
+                    <h3> Other </h3> <span></span>
                 </div>
             </div>
         </section>
 
     </div>
+    <div id="chart-container">
+        <canvas id="myChart"></canvas>
+        <span id="total-cost"> </span>
+    </div>
 
-    <canvas id="myChart"></canvas>
+
+
 
 </main>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </body>
 </html>
