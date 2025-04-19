@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Travel Expense</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="index.js" defer></script>
+</head>
+<body>
+<header>
+    <h1 id="title-heading">My Travel Expense Tracker </h1>
+
+</header>
+<main>
+    <div class="form-container">
+        <label for="costInp"> Cost: </label><input type="number" id="costInp" placeholder="Enter Cost" required>
+        <label for="category">Choose category:</label>
+
+        <select name="category" id="category">
+            <option value="food/drink">Food & Drink</option>
+            <option value="transport">Transport</option>
+            <option value="activity">Activity</option>
+            <option value="shopping">Shopping</option>
+            <option value="accommodation">Accommodation</option>
+            <option value="health">Health</option>
+            <option value="other">Other</option>
+        </select>
+
+        <label for="description">Description</label>
+        <input type="text" id="description" placeholder="Enter a description here (optional)">
+
+        <button id="submit-btn">Enter</button>
+
+        <section id="category-section">
+
+
+
+
+        </section>
+    </div>
+
+
+    <canvas id="myChart"></canvas>
+
+
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+</body>
+</html>
