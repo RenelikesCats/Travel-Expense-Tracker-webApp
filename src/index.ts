@@ -41,13 +41,14 @@ enterBtn.addEventListener("click", (): void => {
 
         localStorage.setItem("costValues", JSON.stringify(costValues))
         toonChart()
+        appendCatSection(xValues[selectedCategory], costValues[selectedCategory])
     }
 })
 
 function appendCatSection(catName: string, cost: number, description?: string): void {
-
-
-
+    const span = document.createElement("span")
+    span.innerText = catName
+    catSection.appendChild(span)
 
 }
 
