@@ -4,6 +4,6 @@ This is a Travel Expense tracker
 
 -This project is not finished yet
 
-Link: https://renelikescats.github.io/Travel-Expense-Tracker/
+Link: https://renelikescats.github.io/Travel-Expense-Tracker-webApp/
 
 
