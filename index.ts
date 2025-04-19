@@ -27,11 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     chart = makeChart();
 
-    for (let i = 0; i < 7; i++) {
+    for (let i:number = 0; i < 7; i++) {
         const divEl = document.getElementById(`${xValues[i]}`) as HTMLDivElement;
         processCategoryListValues(divEl, costValues[i])
     }
-
 });
 
 categories.addEventListener("change", (): void => {
