@@ -38,19 +38,25 @@ categories.addEventListener("change", () => {
     selectedCategory = categories.selectedIndex;
 });
 enterBtn.addEventListener("click", () => {
-    if (costInp.value.trim() !== "" && Number(costInp.value) > 0) {
+    const costInputValue = Number(Number(costInp.value.trim()).toFixed(2));
+    if (!isNaN(costInputValue) && costInputValue > 0) {
         inputError.hidden = true;
-        const storedCostValues = JSON.parse(localStorage.getItem("costValues"));
-        storedCostValues[selectedCategory] += Number(Number(costInp.value).toFixed(2));
+        const storedCostValuesString = localStorage.getItem("costValues");
+        let storedCostValues = storedCostValuesString ? JSON.parse(storedCostValuesString) : Array(xValues.length).fill(0);
+        storedCostValues[selectedCategory] = Number((storedCostValues[selectedCategory] + costInputValue).toFixed(2));
         // Update the chart data
-        // @ts-ignore
-        chart.data.datasets[0].data = storedCostValues;
-        //Rerender chart
-        chart.update();
+        if (chart && chart.data && chart.data.datasets && chart.data.datasets[0]) {
+            chart.data.datasets[0].data = storedCostValues;
+            //Rerender chart
+            chart.update();
+        }
+        else {
+            console.error("Chart object not found.");
+        }
         localStorage.setItem("costValues", JSON.stringify(storedCostValues));
         const divEl = document.getElementById(`${xValues[selectedCategory]}`);
         processCategoryListValues(divEl, storedCostValues[selectedCategory]);
-        const total = storedCostValues.reduce((i, j) => i + j);
+        const total = storedCostValues.reduce((i, j) => Number(i.toFixed(2)) + Number(j.toFixed(2)), 0);
         totalCost.textContent = `Total cost € ${total.toFixed(2)}`;
         costInp.value = "";
     }
@@ -58,6 +64,7 @@ enterBtn.addEventListener("click", () => {
         inputError.hidden = false;
     }
 });
+//Reset button
 resetBtn.addEventListener("click", () => {
     if (confirm("Are you sure you want to reset the data?")) {
         localStorage.clear();

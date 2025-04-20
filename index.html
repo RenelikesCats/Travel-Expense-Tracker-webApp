@@ -16,8 +16,8 @@
 </header>
 <main>
     <div class="form-container">
-        <span id="costInpError" class="error" hidden>Invalid input! cost must be higher than 0 </span>
-        <label for="costInp"> Cost: </label><input type="number" id="costInp" placeholder="Enter Cost" min="1" required>
+        <span id="costInpError" class="error" hidden>Invalid input! Cost must be higher than 0 </span>
+        <label for="costInp"> Cost: </label><input type="number" id="costInp" placeholder="Enter Cost" min="1" step=".01" required>
 
         <label for="category">Choose category:</label>
         <select name="category" id="category">
@@ -62,10 +62,10 @@
     </div>
 
     <div id="chart-container">
-        <button id="reset-btn" class="reset-button">Reset</button>
         <canvas id="myChart"></canvas>
         <span id="total-cost"></span>
     </div>
+    <button id="reset-btn" class="reset-button">Reset</button>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>

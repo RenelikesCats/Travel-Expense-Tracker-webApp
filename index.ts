@@ -44,32 +44,40 @@ categories.addEventListener("change", (): void => {
 });
 
 enterBtn.addEventListener("click", (): void => {
-    if (costInp.value.trim() !== "" && Number(costInp.value) > 0) {
-        inputError.hidden = true
-        const storedCostValues: number[] = JSON.parse(localStorage.getItem("costValues") as string);
-        storedCostValues[selectedCategory] += Number(Number(costInp.value).toFixed(2));
+    const costInputValue: number = Number(Number(costInp.value.trim()).toFixed(2));
+
+    if (!isNaN(costInputValue) && costInputValue > 0) {
+        inputError.hidden = true;
+        const storedCostValuesString = localStorage.getItem("costValues");
+        let storedCostValues: number[] = storedCostValuesString ? JSON.parse(storedCostValuesString) : Array(xValues.length).fill(0);
+
+        storedCostValues[selectedCategory] = Number((storedCostValues[selectedCategory] + costInputValue).toFixed(2));
 
         // Update the chart data
-        // @ts-ignore
-        chart.data.datasets[0].data = storedCostValues;
-        //Rerender chart
-        chart.update();
+        if (chart && chart.data && chart.data.datasets && chart.data.datasets[0]) {
+            chart.data.datasets[0].data = storedCostValues;
+            //Rerender chart
+            chart.update();
+        } else {
+            console.error("Chart object not found.");
+        }
 
         localStorage.setItem("costValues", JSON.stringify(storedCostValues));
 
         const divEl = document.getElementById(`${xValues[selectedCategory]}`) as HTMLDivElement;
         processCategoryListValues(divEl, storedCostValues[selectedCategory]);
 
-        const total: number = storedCostValues.reduce((i: number, j: number) => i + j);
-        totalCost.textContent = `Total cost € ${total.toFixed(2)}`
+        const total: number = storedCostValues.reduce((i: number, j: number) => Number(i.toFixed(2)) + Number(j.toFixed(2)), 0);
+        totalCost.textContent = `Total cost € ${total.toFixed(2)}`;
 
         costInp.value = "";
 
     } else {
-        inputError.hidden = false
+        inputError.hidden = false;
     }
 });
 
+//Reset button
 resetBtn.addEventListener("click", (): void => {
     if (confirm("Are you sure you want to reset the data?")) {
         localStorage.clear();
