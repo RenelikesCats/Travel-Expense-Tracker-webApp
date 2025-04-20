@@ -7,7 +7,11 @@ const inputError = document.getElementById("costInpError");
 const resetBtn = document.getElementById("reset-btn");
 const datetimeInputEl = document.getElementById("datetimeInput");
 const description = document.getElementById("description");
-const xValues = ["food/drink", "transport", "activity", "shopping", "accommodation", "health", "other"];
+const modal = document.getElementById("myModal");
+const modalCloseBtn = document.getElementsByClassName("close")[0];
+const modalViewBtns = document.getElementsByClassName("category-list-btn");
+const modalBody = document.getElementById("modal-body-items");
+const xValues = ["Food/Drink", "Transport", "Activity", "Shopping", "Accommodation", "Health", "Other"];
 let selectedCategory = 0;
 const barColors = [
     "#fd0046", //food
@@ -69,6 +73,7 @@ enterBtn.addEventListener("click", () => {
         };
         saveUserData(userData);
         costInp.value = "";
+        description.value = "";
     }
     else {
         inputError.hidden = false;
@@ -95,6 +100,35 @@ function makeChart() {
         }
     });
 }
+for (let button of modalViewBtns) {
+    button.addEventListener("click", () => {
+        modalBody.innerHTML = "";
+        const userData = JSON.parse(localStorage.getItem("userData"));
+        if (userData !== null) {
+            const modalTitle = document.getElementById("modal-title");
+            const selectedCategory = xValues[Number(button.dataset.index)];
+            const data = userData.filter(data => data.category === selectedCategory);
+            if (data.length > 0) {
+                modalTitle.textContent = selectedCategory;
+                data.forEach(item => {
+                    const itemDiv = document.createElement("div");
+                    itemDiv.classList.add("modal-item");
+                    const costElement = document.createElement("p");
+                    costElement.textContent = `Cost: € ${item.cost}`;
+                    const dateTime = document.createElement("p");
+                    dateTime.textContent = `Time: ${item.date.split("T")[0]} ${item.date.split("T")[1]}`;
+                    const description = document.createElement("p");
+                    description.textContent = `Info: ${item.description} `;
+                    itemDiv.appendChild(costElement);
+                    itemDiv.appendChild(dateTime);
+                    itemDiv.appendChild(description);
+                    modalBody.appendChild(itemDiv);
+                });
+                modal.style.display = "block";
+            }
+        }
+    });
+}
 function getLocalStorageData() {
     const data = localStorage.getItem("costValues");
     return data ? JSON.parse(data) : null;
@@ -106,8 +140,17 @@ resetBtn.addEventListener("click", () => {
         location.reload();
     }
 });
+//Simulate enter
 costInp.addEventListener("keypress", (event) => {
     if (event.key == "Enter") {
         enterBtn.click();
     }
+});
+window.addEventListener("click", (event) => {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+});
+modalCloseBtn.addEventListener("click", () => {
+    modal.style.display = "none";
 });

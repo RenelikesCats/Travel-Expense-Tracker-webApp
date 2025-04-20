@@ -9,7 +9,12 @@ const resetBtn = document.getElementById("reset-btn") as HTMLButtonElement;
 const datetimeInputEl = document.getElementById("datetimeInput") as HTMLInputElement;
 const description = document.getElementById("description") as HTMLInputElement;
 
-const xValues: string[] = ["food/drink", "transport", "activity", "shopping", "accommodation", "health", "other"];
+const modal = document.getElementById("myModal") as HTMLDivElement;
+const modalCloseBtn = document.getElementsByClassName("close")[0];
+const modalViewBtns = document.getElementsByClassName("category-list-btn") as HTMLCollectionOf<HTMLButtonElement>;
+const modalBody = document.getElementById("modal-body-items") as HTMLDivElement;
+
+const xValues: string[] = ["Food/Drink", "Transport", "Activity", "Shopping", "Accommodation", "Health", "Other"];
 let selectedCategory: number = 0;
 
 const barColors: string[] = [
@@ -89,11 +94,11 @@ enterBtn.addEventListener("click", (): void => {
         saveUserData(userData);
 
         costInp.value = "";
+        description.value = "";
     } else {
         inputError.hidden = false;
     }
 });
-
 
 function processCategoryListValues(divEl: HTMLDivElement, cost: number): void {
     divEl.children[1].textContent = `Category cost: € ${cost}`;
@@ -119,6 +124,40 @@ function makeChart(): Chart {
     });
 }
 
+for (let button of modalViewBtns) {
+    button.addEventListener("click", (): void => {
+        modalBody.innerHTML = "";
+        const userData: UserData[] = JSON.parse(localStorage.getItem("userData") as string);
+        if (userData !== null) {
+            const modalTitle = document.getElementById("modal-title") as HTMLHeadingElement
+            const selectedCategory: string = xValues[Number(button.dataset.index)]
+            const data: UserData[] = userData.filter(data => data.category === selectedCategory)
+            if (data.length > 0) {
+                modalTitle.textContent = selectedCategory;
+                data.forEach(item => {
+                    const itemDiv = document.createElement("div");
+                    itemDiv.classList.add("modal-item");
+
+                    const costElement: HTMLParagraphElement = document.createElement("p");
+                    costElement.textContent = `Cost: € ${item.cost}`;
+
+                    const dateTime: HTMLParagraphElement = document.createElement("p");
+                    dateTime.textContent = `Time: ${item.date.split("T")[0]} ${item.date.split("T")[1]}`;
+
+                    const description: HTMLParagraphElement = document.createElement("p");
+                    description.textContent = `Info: ${item.description} `
+
+                    itemDiv.appendChild(costElement);
+                    itemDiv.appendChild(dateTime);
+                    itemDiv.appendChild(description);
+                    modalBody.appendChild(itemDiv);
+                })
+                modal.style.display = "block";
+            }
+        }
+    })
+}
+
 function getLocalStorageData(): number[] | null {
     const data = localStorage.getItem("costValues");
     return data ? JSON.parse(data) : null;
@@ -132,10 +171,17 @@ resetBtn.addEventListener("click", (): void => {
     }
 });
 
+//Simulate enter
 costInp.addEventListener("keypress", (event: KeyboardEvent): void => {
     if (event.key == "Enter") {
         enterBtn.click();
     }
-})
-
-
+});
+window.addEventListener("click", (event: MouseEvent): void => {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+});
+modalCloseBtn.addEventListener("click", (): void => {
+    modal.style.display = "none";
+});
