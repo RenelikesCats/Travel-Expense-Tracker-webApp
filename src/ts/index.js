@@ -114,11 +114,11 @@ for (let button of modalViewBtns) {
                     const itemDiv = document.createElement("div");
                     itemDiv.classList.add("modal-item");
                     const costElement = document.createElement("p");
-                    costElement.textContent = `Cost: € ${item.cost}`;
+                    costElement.textContent = `€ ${item.cost}`;
                     const dateTime = document.createElement("p");
-                    dateTime.textContent = `Time: ${item.date.split("T")[0]} ${item.date.split("T")[1]}`;
+                    dateTime.textContent = `${item.date.split("T")[0]} ${item.date.split("T")[1]}`;
                     const description = document.createElement("p");
-                    description.textContent = `Info: ${item.description} `;
+                    description.textContent = `${item.description} `;
                     itemDiv.appendChild(costElement);
                     itemDiv.appendChild(dateTime);
                     itemDiv.appendChild(description);

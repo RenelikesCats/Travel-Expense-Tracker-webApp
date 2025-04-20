@@ -176,7 +176,7 @@ button:hover {
 
 /* Modal */
 .modal {
-    display: none;
+
     position: fixed;
     z-index: 1;
     left: 0;
@@ -201,13 +201,12 @@ button:hover {
 }
 
 #modal-body-items {
-    margin: 0 15px;
+    margin: 0 10px;
     box-sizing: border-box;
 }
 
 #modal-body-items div {
     display: flex;
-    justify-content: space-between;
     box-sizing: border-box;
 }
 
@@ -220,6 +219,14 @@ button:hover {
 
 #modal-body-items div:nth-child(odd) {
     background-color: rgba(0, 123, 255, 0.14);
+    box-sizing: border-box;
+}
+
+.modal-header{
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    padding: 10px 0;
     box-sizing: border-box;
 }
 
@@ -305,4 +312,5 @@ button:hover {
         width: 60%;
         box-sizing: border-box;
     }
+
 }
