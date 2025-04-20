@@ -1,10 +1,12 @@
+import getTodayDateTime from "./DateTime.js";
+
 const categories = document.getElementById("category") as HTMLSelectElement;
 const enterBtn = document.getElementById("submit-btn") as HTMLButtonElement;
 const costInp = document.getElementById("costInp") as HTMLInputElement;
 const totalCost = document.getElementById("total-cost") as HTMLSpanElement;
 const inputError = document.getElementById("costInpError") as HTMLSpanElement
 const resetBtn = document.getElementById("reset-btn") as HTMLButtonElement;
-
+const datetimeInputEl = document.getElementById("datetimeInput") as HTMLInputElement;
 
 const xValues: string[] = ["food/drink", "transport", "activity", "shopping", "accommodation", "health", "other"];
 let selectedCategory: number = 0;
@@ -23,6 +25,7 @@ let costValues: number[] | null = [];
 let chart: Chart;
 
 document.addEventListener("DOMContentLoaded", (): void => {
+    datetimeInputEl.value = getTodayDateTime();
     costValues = getLocalStorageData();
     if (costValues === null) {
         costValues = [0, 0, 0, 0, 0, 0, 0];
@@ -70,6 +73,9 @@ enterBtn.addEventListener("click", (): void => {
         const total: number = storedCostValues.reduce((i: number, j: number) => i + j, 0);
         totalCost.textContent = `Total cost € ${total.toFixed(2)}`;
 
+        console.log(datetimeInputEl.value);
+
+
         costInp.value = "";
 
     } else {
@@ -90,6 +96,7 @@ function processCategoryListValues(divEl: HTMLDivElement, cost: number): void {
 }
 
 function makeChart(): Chart {
+    //@ts-ignore
     return new Chart("myChart", {
         type: "pie",
         data: {

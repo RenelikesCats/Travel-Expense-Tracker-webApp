@@ -6,13 +6,11 @@
     <title>Travel Expense</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="/plane.png">
-    <script src="index.js" defer></script>
-
+    <script src="index.js" type="module"></script>
 </head>
 <body>
 <header>
     <h1 id="title-heading">My Travel Expense Tracker </h1>
-
 </header>
 <main>
     <div class="form-container">
@@ -32,6 +30,10 @@
 
         <label for="description">Description</label>
         <input type="text" id="description" placeholder="Enter a description here (optional)">
+
+        <label for="datetimeInput">Select date and time:</label>
+        <input type="datetime-local" id="datetimeInput" name="datetimeInput">
+
         <button id="submit-btn">Enter</button>
 
         <section id="category-section">
@@ -67,7 +69,6 @@
     </div>
     <button id="reset-btn" class="reset-button">Reset</button>
 </main>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </body>
 </html>

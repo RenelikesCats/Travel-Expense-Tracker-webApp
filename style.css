@@ -91,7 +91,7 @@ button:hover {
     margin-top: 20px;
     border-radius: 8px;
     box-sizing: border-box;
-    min-height: 250px;
+    min-height: 200px;
 }
 
 .form-container {
@@ -144,7 +144,7 @@ button:hover {
 }
 
 #total-cost {
-    font-size: 1.2em; /* Adjusted font size */
+    font-size: 1.2em;
     display: block;
     text-align: center;
     text-shadow: 1px 1px #ddd;
@@ -179,6 +179,7 @@ button:hover {
         padding: 10px;
         max-width: 600px;
         margin-top: 40px;
+        min-height: 250px;
     }
 
     #category-section {

@@ -1,10 +1,11 @@
-"use strict";
+import getTodayDateTime from "./DateTime.js";
 const categories = document.getElementById("category");
 const enterBtn = document.getElementById("submit-btn");
 const costInp = document.getElementById("costInp");
 const totalCost = document.getElementById("total-cost");
 const inputError = document.getElementById("costInpError");
 const resetBtn = document.getElementById("reset-btn");
+const datetimeInputEl = document.getElementById("datetimeInput");
 const xValues = ["food/drink", "transport", "activity", "shopping", "accommodation", "health", "other"];
 let selectedCategory = 0;
 const barColors = [
@@ -19,6 +20,7 @@ const barColors = [
 let costValues = [];
 let chart;
 document.addEventListener("DOMContentLoaded", () => {
+    datetimeInputEl.value = getTodayDateTime();
     costValues = getLocalStorageData();
     if (costValues === null) {
         costValues = [0, 0, 0, 0, 0, 0, 0];
@@ -58,6 +60,7 @@ enterBtn.addEventListener("click", () => {
         processCategoryListValues(divEl, storedCostValues[selectedCategory]);
         const total = storedCostValues.reduce((i, j) => i + j, 0);
         totalCost.textContent = `Total cost € ${total.toFixed(2)}`;
+        console.log(datetimeInputEl.value);
         costInp.value = "";
     }
     else {
@@ -75,6 +78,7 @@ function processCategoryListValues(divEl, cost) {
     divEl.children[1].textContent = `Category cost: € ${cost}`;
 }
 function makeChart() {
+    //@ts-ignore
     return new Chart("myChart", {
         type: "pie",
         data: {
