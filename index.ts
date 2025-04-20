@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", (): void => {
         localStorage.setItem("costValues", JSON.stringify(costValues));
     } else {
         const total: number = costValues.reduce((i: number, j: number) => i + j);
-        totalCost.textContent = `Total cost € ${total.toPrecision(2)}`
+        totalCost.textContent = `Total cost € ${total.toFixed(2)}`
     }
     chart = makeChart();
 
@@ -67,7 +67,7 @@ enterBtn.addEventListener("click", (): void => {
         const divEl = document.getElementById(`${xValues[selectedCategory]}`) as HTMLDivElement;
         processCategoryListValues(divEl, storedCostValues[selectedCategory]);
 
-        const total: number = storedCostValues.reduce((i: number, j: number) => Number(i.toFixed(2)) + Number(j.toFixed(2)), 0);
+        const total: number = storedCostValues.reduce((i: number, j: number) => i + j, 0);
         totalCost.textContent = `Total cost € ${total.toFixed(2)}`;
 
         costInp.value = "";
