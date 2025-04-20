@@ -6,6 +6,7 @@ const totalCost = document.getElementById("total-cost");
 const inputError = document.getElementById("costInpError");
 const resetBtn = document.getElementById("reset-btn");
 const datetimeInputEl = document.getElementById("datetimeInput");
+const description = document.getElementById("description");
 const xValues = ["food/drink", "transport", "activity", "shopping", "accommodation", "health", "other"];
 let selectedCategory = 0;
 const barColors = [
@@ -41,7 +42,7 @@ categories.addEventListener("change", () => {
 });
 enterBtn.addEventListener("click", () => {
     const costInputValue = Number(Number(costInp.value.trim()).toFixed(2));
-    if (!isNaN(costInputValue) && costInputValue > 0) {
+    if (!isNaN(costInputValue) && costInputValue > 0 && datetimeInputEl.value !== "") {
         inputError.hidden = true;
         const storedCostValuesString = localStorage.getItem("costValues");
         let storedCostValues = storedCostValuesString ? JSON.parse(storedCostValuesString) : Array(xValues.length).fill(0);
@@ -60,6 +61,13 @@ enterBtn.addEventListener("click", () => {
         processCategoryListValues(divEl, storedCostValues[selectedCategory]);
         const total = storedCostValues.reduce((i, j) => i + j, 0);
         totalCost.textContent = `Total cost € ${total.toFixed(2)}`;
+        const userData = {
+            category: xValues[selectedCategory],
+            cost: costInputValue,
+            date: datetimeInputEl.value,
+            description: description.value
+        };
+        saveUserData(userData);
         costInp.value = "";
     }
     else {
@@ -75,6 +83,11 @@ resetBtn.addEventListener("click", () => {
 });
 function processCategoryListValues(divEl, cost) {
     divEl.children[1].textContent = `Category cost: € ${cost}`;
+}
+function saveUserData(userData) {
+    let localStorageData = JSON.parse(localStorage.getItem("userData"));
+    localStorageData !== null ? localStorageData.push(userData) : localStorageData = [userData];
+    localStorage.setItem("userData", JSON.stringify(localStorageData));
 }
 function makeChart() {
     //@ts-ignore

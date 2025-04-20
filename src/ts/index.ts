@@ -7,6 +7,7 @@ const totalCost = document.getElementById("total-cost") as HTMLSpanElement;
 const inputError = document.getElementById("costInpError") as HTMLSpanElement
 const resetBtn = document.getElementById("reset-btn") as HTMLButtonElement;
 const datetimeInputEl = document.getElementById("datetimeInput") as HTMLInputElement;
+const description = document.getElementById("description") as HTMLInputElement;
 
 const xValues: string[] = ["food/drink", "transport", "activity", "shopping", "accommodation", "health", "other"];
 let selectedCategory: number = 0;
@@ -24,6 +25,12 @@ const barColors: string[] = [
 let costValues: number[] | null = [];
 let chart: Chart;
 
+type UserData = {
+    category: string
+    cost: number
+    description?: string
+    date: string
+}
 document.addEventListener("DOMContentLoaded", (): void => {
     datetimeInputEl.value = getTodayDateTime();
     costValues = getLocalStorageData();
@@ -49,7 +56,7 @@ categories.addEventListener("change", (): void => {
 enterBtn.addEventListener("click", (): void => {
     const costInputValue: number = Number(Number(costInp.value.trim()).toFixed(2));
 
-    if (!isNaN(costInputValue) && costInputValue > 0) {
+    if (!isNaN(costInputValue) && costInputValue > 0 && datetimeInputEl.value !== "") {
         inputError.hidden = true;
         const storedCostValuesString = localStorage.getItem("costValues");
         let storedCostValues: number[] = storedCostValuesString ? JSON.parse(storedCostValuesString) : Array(xValues.length).fill(0);
@@ -73,6 +80,14 @@ enterBtn.addEventListener("click", (): void => {
         const total: number = storedCostValues.reduce((i: number, j: number) => i + j, 0);
         totalCost.textContent = `Total cost € ${total.toFixed(2)}`;
 
+        const userData: UserData = {
+            category: xValues[selectedCategory],
+            cost: costInputValue,
+            date: datetimeInputEl.value,
+            description: description.value
+        }
+        saveUserData(userData);
+
         costInp.value = "";
     } else {
         inputError.hidden = false;
@@ -90,6 +105,13 @@ resetBtn.addEventListener("click", (): void => {
 function processCategoryListValues(divEl: HTMLDivElement, cost: number): void {
     divEl.children[1].textContent = `Category cost: € ${cost}`;
 }
+
+function saveUserData(userData: UserData): void {
+    let localStorageData: UserData[] | null = JSON.parse(<string>localStorage.getItem("userData"));
+    localStorageData !== null ? localStorageData.push(userData) : localStorageData = [userData];
+    localStorage.setItem("userData", JSON.stringify(localStorageData));
+}
+
 
 function makeChart(): Chart {
     //@ts-ignore
@@ -115,3 +137,5 @@ costInp.addEventListener("keypress", (event: KeyboardEvent): void => {
         enterBtn.click();
     }
 })
+
+
