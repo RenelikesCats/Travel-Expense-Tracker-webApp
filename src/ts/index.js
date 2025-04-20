@@ -74,13 +74,6 @@ enterBtn.addEventListener("click", () => {
         inputError.hidden = false;
     }
 });
-//Reset button
-resetBtn.addEventListener("click", () => {
-    if (confirm("Are you sure you want to reset the data?")) {
-        localStorage.clear();
-        location.reload();
-    }
-});
 function processCategoryListValues(divEl, cost) {
     divEl.children[1].textContent = `Category cost: € ${cost}`;
 }
@@ -106,6 +99,13 @@ function getLocalStorageData() {
     const data = localStorage.getItem("costValues");
     return data ? JSON.parse(data) : null;
 }
+//Reset button
+resetBtn.addEventListener("click", () => {
+    if (confirm("Are you sure you want to reset the data?")) {
+        localStorage.clear();
+        location.reload();
+    }
+});
 costInp.addEventListener("keypress", (event) => {
     if (event.key == "Enter") {
         enterBtn.click();

@@ -94,13 +94,6 @@ enterBtn.addEventListener("click", (): void => {
     }
 });
 
-//Reset button
-resetBtn.addEventListener("click", (): void => {
-    if (confirm("Are you sure you want to reset the data?")) {
-        localStorage.clear();
-        location.reload();
-    }
-});
 
 function processCategoryListValues(divEl: HTMLDivElement, cost: number): void {
     divEl.children[1].textContent = `Category cost: € ${cost}`;
@@ -111,7 +104,6 @@ function saveUserData(userData: UserData): void {
     localStorageData !== null ? localStorageData.push(userData) : localStorageData = [userData];
     localStorage.setItem("userData", JSON.stringify(localStorageData));
 }
-
 
 function makeChart(): Chart {
     //@ts-ignore
@@ -131,6 +123,14 @@ function getLocalStorageData(): number[] | null {
     const data = localStorage.getItem("costValues");
     return data ? JSON.parse(data) : null;
 }
+
+//Reset button
+resetBtn.addEventListener("click", (): void => {
+    if (confirm("Are you sure you want to reset the data?")) {
+        localStorage.clear();
+        location.reload();
+    }
+});
 
 costInp.addEventListener("keypress", (event: KeyboardEvent): void => {
     if (event.key == "Enter") {
