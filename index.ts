@@ -73,11 +73,7 @@ enterBtn.addEventListener("click", (): void => {
         const total: number = storedCostValues.reduce((i: number, j: number) => i + j, 0);
         totalCost.textContent = `Total cost € ${total.toFixed(2)}`;
 
-        console.log(datetimeInputEl.value);
-
-
         costInp.value = "";
-
     } else {
         inputError.hidden = false;
     }

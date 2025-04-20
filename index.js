@@ -60,7 +60,6 @@ enterBtn.addEventListener("click", () => {
         processCategoryListValues(divEl, storedCostValues[selectedCategory]);
         const total = storedCostValues.reduce((i, j) => i + j, 0);
         totalCost.textContent = `Total cost € ${total.toFixed(2)}`;
-        console.log(datetimeInputEl.value);
         costInp.value = "";
     }
     else {
