@@ -238,10 +238,19 @@ button:hover {
 }
 
 .close:hover,
-.close:focus {
+.close:focus,
+.close-modal:hover {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.close-modal {
+    position: absolute;
+    color: #848484;
+    font-size: 35px;
+    font-weight: bold;
+    margin-left: 15px;
 }
 
 #modal-title {
@@ -284,9 +293,9 @@ button:hover {
     #myChart {
         padding: 10px;
         max-width: 600px;
-        margin-top: 40px;
-        min-height: 250px;
+        margin-top: 100px;
         box-sizing: border-box;
+        height: 35vh;
     }
 
     #category-section {

@@ -1,187 +1,207 @@
 import getTodayDateTime from "./DateTime.js";
 
-const categories = document.getElementById("category") as HTMLSelectElement;
-const enterBtn = document.getElementById("submit-btn") as HTMLButtonElement;
-const costInp = document.getElementById("costInp") as HTMLInputElement;
-const totalCost = document.getElementById("total-cost") as HTMLSpanElement;
-const inputError = document.getElementById("costInpError") as HTMLSpanElement
-const resetBtn = document.getElementById("reset-btn") as HTMLButtonElement;
-const datetimeInputEl = document.getElementById("datetimeInput") as HTMLInputElement;
-const description = document.getElementById("description") as HTMLInputElement;
+//Does it look bad or messy? :D I tried my best refactoring, optimizing and keeping it clean
+//There is always room for improvement! So if you are reading this, let me know if you have any suggestions :)
 
-const modal = document.getElementById("myModal") as HTMLDivElement;
-const modalCloseBtn = document.getElementsByClassName("close")[0];
-const modalViewBtns = document.getElementsByClassName("category-list-btn") as HTMLCollectionOf<HTMLButtonElement>;
-const modalBody = document.getElementById("modal-body-items") as HTMLDivElement;
+const DOMELEMEMENTS = {
+    //Select elements
+    cat: document.getElementById("category") as HTMLSelectElement,
+    //Input elements
+    costInp: document.getElementById("costInp") as HTMLInputElement,
+    dateInp: document.getElementById("datetimeInput") as HTMLInputElement,
+    descInp: document.getElementById("description") as HTMLInputElement,
+    //Span elements
+    totalCost: document.getElementById("total-cost") as HTMLSpanElement,
+    inpErr: document.getElementById("costInpError") as HTMLSpanElement,
 
-const xValues: string[] = ["Food/Drink", "Transport", "Activity", "Shopping", "Accommodation", "Health", "Other"];
-let selectedCategory: number = 0;
+    resetBtn: document.getElementById("reset-btn") as HTMLButtonElement,
+    enterBtn: document.getElementById("submit-btn") as HTMLButtonElement,
 
-const barColors: string[] = [
-    "#fd0046", //food
-    "#003fb8", //transport
-    "#36972b", //activity
-    "#fffb00", //shopping
-    "#702b03", //accommodation
-    "#c5449d", //health
-    "#1e1e1e"  //other
-];
+    //Modal elements
+    modal: document.getElementById("myModal") as HTMLDivElement,
+    modalClose: document.getElementsByClassName("close")[0] as HTMLSpanElement,
+    modalViewBtns: document.getElementsByClassName("category-list-btn") as HTMLCollectionOf<HTMLButtonElement>,
+    modalBody: document.getElementById("modal-body-items") as HTMLDivElement,
+};
 
-let costValues: number[] | null = [];
-let chart: Chart;
+const CATEGORIES: string[] = ["Food/Drink", "Transport", "Activity", "Shopping", "Accommodation", "Health", "Other"];
+const COLORS: string[] = [
+    "#fd0046",
+    "#003fb8",
+    "#36972b",
+    "#fffb00",
+    "#702b03",
+    "#c5449d",
+    "#1e1e1e"];
 
-type UserData = {
+const COST_KEY: string = "costValues";
+const USER_KEY: string = "userData";
+
+let selectedCatIndex: number = 0;
+let nextId: number;// Id to keep track of buttons :) not sure if it's the best way to do it, but it works for now :D
+let costs: number[] = [];
+let myChart: Chart | null = null;
+
+type ExpenseData = {
+    id: number
     category: string
     cost: number
     description?: string
     date: string
-}
+};
+
+const getLocal = <T>(key: string): T | null => JSON.parse(localStorage.getItem(key) as string);
+const setLocal = <T>(key: string, data: T): void => localStorage.setItem(key, JSON.stringify(data));
+const initCosts = (): void => {
+    costs = getLocal<number[]>(COST_KEY) || Array(CATEGORIES.length).fill(0);
+    setLocal(COST_KEY, costs);
+    DOMELEMEMENTS.totalCost.textContent = `Total cost € ${costs.reduce((sum, cost) => sum + cost, 0).toFixed(2)}`;
+};
+const initId = (): void => {
+    //So if userData size is bigger 0,
+    // then nextId's value is assigned to the last element's id in userData + 1
+    // otherwise it's assigned to 0 🐈
+    const users = getLocal<ExpenseData[]>(USER_KEY) || [];
+    nextId = users.length > 0 ? users[users.length - 1].id + 1 : 0;
+};
+
 document.addEventListener("DOMContentLoaded", (): void => {
-    datetimeInputEl.value = getTodayDateTime();
-    costValues = getLocalStorageData();
-    if (costValues === null) {
-        costValues = [0, 0, 0, 0, 0, 0, 0];
-        localStorage.setItem("costValues", JSON.stringify(costValues));
+    DOMELEMEMENTS.dateInp.value = getTodayDateTime();
+    initCosts();
+    initId();
+    myChart = makeChart();
+    CATEGORIES.forEach((_, i) => updateCatDisplay(i, costs[i] || 0));
+});
+
+
+// @ts-ignore
+const makeChart = (): Chart => new Chart("myChart", {
+    type: "pie",
+    data: {
+        labels: CATEGORIES,
+        datasets: [{
+            backgroundColor: COLORS,
+            data: costs,
+        }],
+    },
+});
+const updateCatDisplay = (index: number, cost: number): void => {
+    const el = document.getElementById(CATEGORIES[index]) as HTMLDivElement;
+    el ? el.children[1].textContent = `Category cost: € ${cost.toFixed(2)}` : void 0;
+};
+const saveExpense = (expense: ExpenseData): void => {
+    const expenses = getLocal<ExpenseData[]>(USER_KEY) || [];
+    expenses.push(expense);
+    setLocal(USER_KEY, expenses);
+};
+const updateChartData = (): void => {
+    if (myChart?.data?.datasets) {
+        myChart.data.datasets[0].data = costs;
+        myChart.update();
+    }
+};
+
+DOMELEMEMENTS.cat.addEventListener("change", (): void => {
+    selectedCatIndex = DOMELEMEMENTS.cat.selectedIndex;
+});
+
+DOMELEMEMENTS.enterBtn.addEventListener("click", (): void => {
+    const cost = Number(DOMELEMEMENTS.costInp.value.trim());
+    if (!isNaN(cost) && cost > 0 && DOMELEMEMENTS.dateInp.value) {
+        DOMELEMEMENTS.inpErr.hidden = true;
+        costs[selectedCatIndex] = Number((costs[selectedCatIndex] + cost).toFixed(2));
+        setLocal(COST_KEY, costs);
+        updateCatDisplay(selectedCatIndex, costs[selectedCatIndex]);
+        DOMELEMEMENTS.totalCost.textContent = `Total cost € ${costs.reduce((i, j) => i + j, 0).toFixed(2)}`;
+        updateChartData();
+        saveExpense({
+            id: nextId++,
+            category: CATEGORIES[selectedCatIndex],
+            cost,
+            date: DOMELEMEMENTS.dateInp.value,
+            description: DOMELEMEMENTS.descInp.value,
+        });
+        DOMELEMEMENTS.costInp.value = "";
+        DOMELEMEMENTS.descInp.value = "";
     } else {
-        const total: number = costValues.reduce((i: number, j: number) => i + j);
-        totalCost.textContent = `Total cost € ${total.toFixed(2)}`
-    }
-    chart = makeChart();
-
-    for (let i: number = 0; i < 7; i++) {
-        const divEl = document.getElementById(`${xValues[i]}`) as HTMLDivElement;
-        processCategoryListValues(divEl, costValues[i])
+        DOMELEMEMENTS.inpErr.hidden = false;
     }
 });
 
-categories.addEventListener("change", (): void => {
-    selectedCategory = categories.selectedIndex;
-});
+Array.from(DOMELEMEMENTS.modalViewBtns).forEach(btn => btn.addEventListener("click", (): void => {
+    DOMELEMEMENTS.modalBody.innerHTML = "";
+    const expenses = getLocal<ExpenseData[]>(USER_KEY) || [];
 
-enterBtn.addEventListener("click", (): void => {
-    const costInputValue: number = Number(Number(costInp.value.trim()).toFixed(2));
+    if (expenses.length > 0) {
+        const cat: string = CATEGORIES[Number(btn.dataset.index)];
+        const catExpenses = expenses.filter(e => e.category === cat);
+        (document.getElementById("modal-title") as HTMLHeadingElement).textContent = cat;
 
-    if (!isNaN(costInputValue) && costInputValue > 0 && datetimeInputEl.value !== "") {
-        inputError.hidden = true;
-        const storedCostValuesString = localStorage.getItem("costValues");
-        let storedCostValues: number[] = storedCostValuesString ? JSON.parse(storedCostValuesString) : Array(xValues.length).fill(0);
-
-        storedCostValues[selectedCategory] = Number((storedCostValues[selectedCategory] + costInputValue).toFixed(2));
-
-        // Update the chart data
-        if (chart && chart.data && chart.data.datasets && chart.data.datasets[0]) {
-            chart.data.datasets[0].data = storedCostValues;
-            //Rerender chart
-            chart.update();
+        if (catExpenses.length > 0) {
+            catExpenses.forEach(item => {
+                const itemDiv = document.createElement("div");
+                itemDiv.classList.add("modal-item");
+                const closeBtn = document.createElement("span");
+                closeBtn.classList.add("close-modal");
+                closeBtn.innerHTML = "&times;";
+                closeBtn.addEventListener("click", (): void => {
+                    const currentCosts = getLocal<number[]>(COST_KEY);
+                    const currentExpenses = getLocal<ExpenseData[]>(USER_KEY) || [];
+                    if (currentCosts) {
+                        const catIndex = CATEGORIES.indexOf(item.category);
+                        currentCosts[catIndex] = Number((currentCosts[catIndex] - item.cost).toFixed(2));
+                        setLocal(COST_KEY, currentCosts);
+                        const indexToRemove = currentExpenses.findIndex(e => e.id === item.id);
+                        if (indexToRemove > -1) {
+                            currentExpenses.splice(indexToRemove, 1);
+                            setLocal(USER_KEY, currentExpenses);
+                        }
+                        updateCatDisplay(catIndex, currentCosts[catIndex]);
+                        costs = currentCosts;
+                        DOMELEMEMENTS.totalCost.textContent = `Total cost € ${costs.reduce((i, j) => i + j, 0).toFixed(2)}`;
+                        updateChartData();
+                        itemDiv.remove();
+                    }
+                });
+                const costEl = document.createElement("p");
+                costEl.textContent = `€ ${item.cost.toFixed(2)}`;
+                const dateEl = document.createElement("p");
+                const [datePart, timePart] = item.date.split("T");
+                dateEl.textContent = `${datePart} ${timePart?.split(".")[0] || ""}`;
+                const descEl = document.createElement("p");
+                descEl.textContent = item.description || "";
+                itemDiv.append(closeBtn, costEl, dateEl, descEl);
+                DOMELEMEMENTS.modalBody.appendChild(itemDiv);
+            });
+            DOMELEMEMENTS.modal.style.display = "block";
         } else {
-            console.error("Chart object not found.");
+            const noItems = document.createElement("i");
+            noItems.textContent = "No items in this category yet.";
+            DOMELEMEMENTS.modalBody.appendChild(noItems);
+            DOMELEMEMENTS.modal.style.display = "block";
         }
-
-        localStorage.setItem("costValues", JSON.stringify(storedCostValues));
-
-        const divEl = document.getElementById(`${xValues[selectedCategory]}`) as HTMLDivElement;
-        processCategoryListValues(divEl, storedCostValues[selectedCategory]);
-
-        const total: number = storedCostValues.reduce((i: number, j: number) => i + j, 0);
-        totalCost.textContent = `Total cost € ${total.toFixed(2)}`;
-
-        const userData: UserData = {
-            category: xValues[selectedCategory],
-            cost: costInputValue,
-            date: datetimeInputEl.value,
-            description: description.value
-        }
-        saveUserData(userData);
-
-        costInp.value = "";
-        description.value = "";
-    } else {
-        inputError.hidden = false;
     }
-});
+}));
 
-function processCategoryListValues(divEl: HTMLDivElement, cost: number): void {
-    divEl.children[1].textContent = `Category cost: € ${cost}`;
-}
-
-function saveUserData(userData: UserData): void {
-    let localStorageData: UserData[] | null = JSON.parse(<string>localStorage.getItem("userData"));
-    localStorageData !== null ? localStorageData.push(userData) : localStorageData = [userData];
-    localStorage.setItem("userData", JSON.stringify(localStorageData));
-}
-
-function makeChart(): Chart {
-    //@ts-ignore
-    return new Chart("myChart", {
-        type: "pie",
-        data: {
-            labels: xValues,
-            datasets: [{
-                backgroundColor: barColors,
-                data: JSON.parse(localStorage.getItem("costValues") as string),
-            }]
-        }
-    });
-}
-
-for (let button of modalViewBtns) {
-    button.addEventListener("click", (): void => {
-        modalBody.innerHTML = "";
-        const userData: UserData[] = JSON.parse(localStorage.getItem("userData") as string);
-        if (userData !== null) {
-            const modalTitle = document.getElementById("modal-title") as HTMLHeadingElement
-            const selectedCategory: string = xValues[Number(button.dataset.index)]
-            const data: UserData[] = userData.filter(data => data.category === selectedCategory)
-            if (data.length > 0) {
-                modalTitle.textContent = selectedCategory;
-                data.forEach(item => {
-                    const itemDiv = document.createElement("div");
-                    itemDiv.classList.add("modal-item");
-
-                    const costElement: HTMLParagraphElement = document.createElement("p");
-                    costElement.textContent = `€ ${item.cost}`;
-
-                    const dateTime: HTMLParagraphElement = document.createElement("p");
-                    dateTime.textContent = `${item.date.split("T")[0]} ${item.date.split("T")[1]}`;
-
-                    const description: HTMLParagraphElement = document.createElement("p");
-                    description.textContent = `${item.description} `
-
-                    itemDiv.appendChild(costElement);
-                    itemDiv.appendChild(dateTime);
-                    itemDiv.appendChild(description);
-                    modalBody.appendChild(itemDiv);
-                })
-                modal.style.display = "block";
-            }
-        }
-    })
-}
-
-function getLocalStorageData(): number[] | null {
-    const data = localStorage.getItem("costValues");
-    return data ? JSON.parse(data) : null;
-}
-
-//Reset button
-resetBtn.addEventListener("click", (): void => {
+DOMELEMEMENTS.resetBtn.addEventListener("click", (): void => {
     if (confirm("Are you sure you want to reset the data?")) {
         localStorage.clear();
         location.reload();
     }
 });
 
-//Simulate enter
-costInp.addEventListener("keypress", (event: KeyboardEvent): void => {
-    if (event.key == "Enter") {
-        enterBtn.click();
+DOMELEMEMENTS.costInp.addEventListener("keypress", (e: KeyboardEvent): void => {
+    if (e.key === "Enter") {
+        DOMELEMEMENTS.enterBtn.click();
     }
 });
-window.addEventListener("click", (event: MouseEvent): void => {
-    if (event.target == modal) {
-        modal.style.display = "none";
+
+window.addEventListener("click", (e: MouseEvent): void => {
+    if (e.target === DOMELEMEMENTS.modal) {
+        DOMELEMEMENTS.modal.style.display = "none";
     }
 });
-modalCloseBtn.addEventListener("click", (): void => {
-    modal.style.display = "none";
+
+DOMELEMEMENTS.modalClose.addEventListener("click", (): void => {
+    DOMELEMEMENTS.modal.style.display = "none";
 });
